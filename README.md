@@ -2,7 +2,7 @@
 
 A step-by-step, interactive visualization of how Retrieval-Augmented Generation works: from raw text to grounded AI response. Every intermediate output is visible and tuneable. Built with real TF-IDF vectorization and cosine similarity, not mock data.
 
-**Live Demo:** https://prodxsg.github.io/RAG/
+**Live Demo:** [https://prodxsg.github.io/RAG/](https://prodxsg.github.io/RAG-Pipeline-Interactive-Visualization/)
 
 ---
 

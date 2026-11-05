@@ -839,6 +839,8 @@ const STOPWORDS = new Set([
     'also','just','each','more','their','they','we','our','you','your'
 ]);
 
+const MIN_SIMILARITY_THRESHOLD = 0.15;
+
 function tokenize(text) {
     return text.toLowerCase()
         .replace(/[^a-z0-9\s]/g, ' ')
@@ -974,7 +976,9 @@ function handleFile(file) {
     get('fileName').classList.remove('hidden');
     const reader = new FileReader();
     reader.onload = e => {
-        get('sourceText').value = e.target.result;
+        const currentText = get('sourceText').value.trim();
+        const newText = e.target.result.trim();
+        get('sourceText').value = currentText ? currentText + '\n\n' + newText : newText;
         updateAnalytics();
         switchTab(document.querySelector('.tab-btn'), 'text');
     };
@@ -1110,9 +1114,12 @@ async function runRetrieval(btn) {
     const container = get('retrievalOutput');
     container.innerHTML = '';
 
+    const topScore = state.searchResults[0]?.score || 0;
     const allZero = state.searchResults.every(r => r.score <= 0);
-    if (allZero) {
-        container.innerHTML = '<div style="color:var(--text-muted); font-size:0.9rem; padding:10px;">No query terms found in vocabulary. Try a different query or reprocess the document.</div>';
+
+    if (allZero || topScore < MIN_SIMILARITY_THRESHOLD) {
+        container.innerHTML = '<div style="color:var(--text-muted); font-size:0.9rem; padding:10px;">No relevant context found for this query.</div>';
+        get('constructPromptRow').classList.add('hidden');
     } else {
         state.searchResults.slice(0, k).forEach(item => {
             const pct = (item.score * 100).toFixed(1);
@@ -1127,12 +1134,12 @@ async function runRetrieval(btn) {
                 <div style="font-size:0.8rem; line-height:1.5; color:#475569;">${escHtml(item.text)}</div>`;
             container.appendChild(div);
         });
+        get('constructPromptRow').classList.remove('hidden');
     }
 
     setLatency(start);
     btn.innerHTML = 'Execute Vector Search';
     btn.disabled = false;
-    get('constructPromptRow').classList.remove('hidden');
     unlockStep(6);
 }
 

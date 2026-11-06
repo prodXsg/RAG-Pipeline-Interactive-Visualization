@@ -1120,6 +1120,7 @@ async function runRetrieval(btn) {
     if (allZero || topScore < MIN_SIMILARITY_THRESHOLD) {
         container.innerHTML = '<div style="color:var(--text-muted); font-size:0.9rem; padding:10px;">No relevant context found for this query.</div>';
         get('constructPromptRow').classList.add('hidden');
+        get('promptOutput').textContent = '';
     } else {
         state.searchResults.slice(0, k).forEach(item => {
             const pct = (item.score * 100).toFixed(1);
@@ -1147,6 +1148,12 @@ async function runRetrieval(btn) {
    STEP 5 → 6 : BUILD PROMPT
 ============================================================ */
 function buildPrompt() {
+    const topScore = state.searchResults[0]?.score || 0;
+    if (topScore < MIN_SIMILARITY_THRESHOLD) {
+        console.log('No-match guard: top score', topScore, '< threshold', MIN_SIMILARITY_THRESHOLD);
+        return alert('No relevant context found. The button should not be visible.');
+    }
+
     const k       = parseInt(get('topK').value);
     const top     = state.searchResults.slice(0, k);
     const context = top.map((c, i) => `[${i + 1}] ${c.text}`).join('\n\n');
@@ -1228,6 +1235,12 @@ function mockResponse() {
 }
 
 async function runLLM(btn) {
+    const topScore = state.searchResults[0]?.score || 0;
+    if (topScore < MIN_SIMILARITY_THRESHOLD) {
+        console.log('No-match guard: top score', topScore, '< threshold', MIN_SIMILARITY_THRESHOLD);
+        return alert('No relevant context found for this query. Run a new search first.');
+    }
+
     const prompt = get('promptOutput').textContent;
     if (!prompt) return alert('Build the prompt first.');
 

@@ -703,11 +703,7 @@
                     <button class="tab-btn" onclick="switchTab(this, 'file')">Upload File</button>
                 </div>
                 <div id="mode-text">
-                    <textarea id="sourceText" rows="8" oninput="updateAnalytics()" style="margin-bottom:0;" placeholder="RAG (Retrieval-Augmented Generation) is a technique that enhances Large Language Models by fetching relevant data from external sources before generating an answer. Instead of relying solely on training data, RAG splits documents into chunks, turns them into vectors, and retrieves the most similar chunks to the user's query.
-
-This approach reduces hallucinations because the model grounds its response in actual retrieved text rather than its learned parameters alone. Vector similarity search allows finding semantically related content even when exact keywords don't match.
-
-The retrieved chunks are injected into the prompt as context, enabling the LLM to produce accurate, grounded answers. TF-IDF (Term Frequency-Inverse Document Frequency) is a classic vectorization method that weights terms by how frequently they appear in a document relative to the entire corpus."></textarea>
+                    <textarea id="sourceText" rows="8" oninput="updateAnalytics()" style="margin-bottom:0;"></textarea>
                 </div>
                 <div id="mode-file" class="hidden">
                     <div class="drop-zone" id="dropZone">

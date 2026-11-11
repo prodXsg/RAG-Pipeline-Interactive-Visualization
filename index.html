@@ -1123,6 +1123,8 @@ async function runRetrieval(btn) {
         container.innerHTML = '<div style="color:var(--text-muted); font-size:0.9rem; padding:10px;">No relevant context found for this query.</div>';
         get('constructPromptRow').classList.add('hidden');
         get('promptOutput').textContent = '';
+        get('llmOutput').textContent = '';
+        get('llmOutput').classList.add('hidden');
     } else {
         state.searchResults.slice(0, k).forEach(item => {
             const pct = (item.score * 100).toFixed(1);
